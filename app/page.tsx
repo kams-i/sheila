@@ -29,9 +29,10 @@ export default function QuizMaker() {
   const [timeLeft, setTimeLeft] = useState<number>(MAX_TIME); // New state for timer
   const [quizStart, setQuizStart] = useState<number>(0); // New state to track start time
 
-  // --- TIMER EFFECT ---
+  // --- TIMER EFFECT (FIXED) ---
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    // FIX 1: Initialize timer as undefined (optional type) to satisfy TypeScript's strict checks.
+    let timer: NodeJS.Timeout | undefined = undefined; 
 
     // Only run the timer if we are in the quiz step and time is left
     if (step === 'quiz' && timeLeft > 0) {
@@ -42,11 +43,17 @@ export default function QuizMaker() {
 
     // If the timer reaches 0, move to results
     if (timeLeft === 0 && step === 'quiz') {
-      clearInterval(timer);
+      // FIX 2: Removed redundant clearInterval(timer) call here. 
+      // Setting 'results' step will trigger the cleanup function below, which handles the clearing.
       setStep('results');
     }
 
-    return () => clearInterval(timer);
+    // FIX 3: Conditional cleanup. We only clear the interval if it was successfully set (i.e., 'timer' is not undefined).
+    return () => {
+        if (timer) {
+            clearInterval(timer);
+        }
+    };
   }, [step, timeLeft]);
 
   // --- INITIAL CATEGORY FETCH ---
@@ -66,7 +73,7 @@ export default function QuizMaker() {
 
   // --- START QUIZ ---
   const start = async () => {
-    // *** NEW VALIDATION LOGIC ***
+    // * NEW VALIDATION LOGIC *
     if (!name.trim()) {
       setShowNameError(true);
       return;
