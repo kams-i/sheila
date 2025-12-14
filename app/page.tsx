@@ -142,9 +142,9 @@ export default function QuizMaker() {
   // Define the Project Header Component with appropriate styling for the dark background
   const ProjectHeader = () => (
     <div className='text-white p-4 text-center mb-4'>
-      <p className='text-2xl font-extrabold'>Group 1 Project</p>
-      <p className="text-xl font-bold">Quiz</p>
-      <p className="text-2xl font-bold text-gray-300">Web Application Development (IFT 302)</p>
+
+      <p className="text-4xl font-bold">Quiz</p>
+
     </div>
   );
 
